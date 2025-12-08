@@ -1,0 +1,71 @@
+# Privacy-Preserving RAG System Configuration
+
+# Embedding Configuration
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"  # Lightweight embedding model
+  dimension: 384
+  batch_size: 32
+  device: "cpu"  # or "cuda" if GPU available
+
+# Vector Database Configuration
+vector_db:
+  type: "qdrant"
+  host: "localhost"
+  port: 6333
+  collection_name: "encrypted_documents"
+  distance_metric: "cosine"
+  top_k: 5
+
+# Document Processing Configuration
+document_processing:
+  chunk_size: 512
+  chunk_overlap: 50
+  supported_formats: ["pdf", "txt", "docx"]
+  encoding: "utf-8"
+
+# Encryption Configuration
+encryption:
+  algorithm: "AES"
+  key_size: 256  # bits
+  mode: "GCM"
+
+# LLM Configuration
+llm:
+  provider: "ollama"
+  model_name: "llama3.2:3b"  # Lightweight model
+  base_url: "http://localhost:11434"
+  temperature: 0.7
+  max_tokens: 512
+  quantization: "4bit"
+
+# RAG Pipeline Configuration
+rag:
+  retrieval_mode: "similarity"
+  rerank: false
+  context_window: 3
+  prompt_template: |
+    Based on the following context, please answer the question.
+    
+    Context:
+    {context}
+    
+    Question: {question}
+    
+    Answer:
+
+# Audit Configuration
+audit:
+  enable: true
+  log_queries: true
+  log_retrievals: true
+  log_sensitive_data: false
+  log_file: "logs/audit.log"
+  integrity_check: true
+
+# System Configuration
+system:
+  data_dir: "data"
+  documents_dir: "data/documents"
+  encrypted_dir: "data/encrypted"
+  vectors_dir: "data/vectors"
+  max_file_size_mb: 50
