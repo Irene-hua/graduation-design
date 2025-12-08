@@ -7,6 +7,7 @@ import time
 import uuid
 from typing import List, Dict, Any, Optional
 from pathlib import Path
+from qdrant_client.models import Distance
 
 from .encryption import EncryptionManager, KeyManager
 from .retrieval import EmbeddingModel, VectorStore
@@ -54,12 +55,20 @@ class PrivacyEnhancedRAG:
         
         # Initialize vector store
         vdb_config = self.config.get_section('vector_db')
+        # Map string distance to Distance enum
+        distance_map = {
+            'COSINE': Distance.COSINE,
+            'EUCLID': Distance.EUCLID,
+            'DOT': Distance.DOT
+        }
+        distance_str = vdb_config.get('distance', 'COSINE').upper()
+        distance = distance_map.get(distance_str, Distance.COSINE)
+        
         self.vector_store = VectorStore(
             collection_name=vdb_config.get('collection_name', 'private_documents'),
             path=vdb_config.get('storage_path', 'data/vector_db'),
             vector_size=self.embedding_model.get_embedding_dimension(),
-            distance=getattr(__import__('qdrant_client.models', fromlist=['Distance']), 
-                           vdb_config.get('distance', 'COSINE'))
+            distance=distance
         )
         
         # Initialize LLM client
@@ -117,7 +126,8 @@ class PrivacyEnhancedRAG:
             for text in texts:
                 encrypted_base64 = self.encryption_manager.encrypt_to_base64(text)
                 encrypted_data.append(encrypted_base64)
-                nonces.append('')  # Nonce is included in base64 encoding
+                # Nonce is embedded in the base64-encoded ciphertext, so we pass None as placeholder
+                nonces.append(None)
             
             # Log encryption operation
             self.audit_logger.log_encryption_operation(

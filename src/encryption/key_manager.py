@@ -5,6 +5,7 @@ Key Manager for generating and managing encryption keys
 
 import os
 from pathlib import Path
+from typing import Tuple
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
@@ -91,7 +92,7 @@ class KeyManager:
         return self.key_file_path.exists()
     
     @staticmethod
-    def derive_key_from_password(password: str, salt: bytes = None) -> tuple[bytes, bytes]:
+    def derive_key_from_password(password: str, salt: bytes = None) -> Tuple[bytes, bytes]:
         """
         Derive an encryption key from a password using PBKDF2
         

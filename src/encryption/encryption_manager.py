@@ -6,7 +6,7 @@ Encryption Manager for AES-GCM encryption and decryption
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import os
 import base64
-from typing import Tuple
+from typing import Tuple, List
 from .key_manager import KeyManager
 
 
@@ -98,7 +98,7 @@ class EncryptionManager:
         ciphertext = combined[12:]
         return self.decrypt(ciphertext, nonce)
     
-    def encrypt_batch(self, texts: list[str]) -> list[Tuple[bytes, bytes]]:
+    def encrypt_batch(self, texts: List[str]) -> List[Tuple[bytes, bytes]]:
         """
         Encrypt multiple texts
         
@@ -110,7 +110,7 @@ class EncryptionManager:
         """
         return [self.encrypt(text) for text in texts]
     
-    def decrypt_batch(self, encrypted_data: list[Tuple[bytes, bytes]]) -> list[str]:
+    def decrypt_batch(self, encrypted_data: List[Tuple[bytes, bytes]]) -> List[str]:
         """
         Decrypt multiple encrypted texts
         
