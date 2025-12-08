@@ -70,13 +70,19 @@ class DocumentParser:
     
     def _parse_text(self, filepath: Path) -> str:
         """Parse plain text or markdown file"""
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                return f.read()
-        except UnicodeDecodeError:
-            # Try with different encoding
-            with open(filepath, 'r', encoding='gbk') as f:
-                return f.read()
+        # Try common encodings in order
+        encodings = ['utf-8', 'utf-16', 'gbk', 'gb2312', 'latin-1', 'ascii']
+        
+        for encoding in encodings:
+            try:
+                with open(filepath, 'r', encoding=encoding) as f:
+                    return f.read()
+            except (UnicodeDecodeError, LookupError):
+                continue
+        
+        # If all encodings fail, read as binary and decode with errors='replace'
+        with open(filepath, 'rb') as f:
+            return f.read().decode('utf-8', errors='replace')
     
     def _parse_pdf(self, filepath: Path) -> str:
         """Parse PDF file"""

@@ -104,7 +104,7 @@ class VectorStore:
         points = []
         point_ids = []
         
-        for i, (vector, encrypted_chunk) in enumerate(vectors, encrypted_chunks):
+        for i, (vector, encrypted_chunk) in enumerate(zip(vectors, encrypted_chunks)):
             # Generate unique ID
             point_id = str(uuid.uuid4())
             point_ids.append(point_id)
@@ -158,9 +158,9 @@ class VectorStore:
         # Prepare filter if provided
         query_filter = None
         if filter_dict:
-            # Convert filter_dict to Qdrant filter
-            # This is a simple implementation - extend as needed
-            pass
+            # Note: Filter implementation can be extended based on specific needs
+            # For now, filters are not supported - this is a future enhancement
+            raise NotImplementedError("Filtering is not yet implemented. This is a future feature.")
         
         # Search
         results = self.client.search(
