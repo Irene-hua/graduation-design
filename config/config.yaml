@@ -1,0 +1,74 @@
+# Privacy-Enhanced Lightweight RAG System Configuration
+
+# Encryption Settings
+encryption:
+  algorithm: "AES"
+  key_size: 256  # bits
+  mode: "GCM"    # Galois/Counter Mode for authenticated encryption
+  key_file: "config/encryption.key"  # Path to encryption key (DO NOT commit!)
+
+# Vector Database Settings
+vector_db:
+  type: "qdrant"
+  host: "localhost"
+  port: 6333
+  collection_name: "private_documents"
+  vector_size: 384  # Depends on embedding model
+  distance: "Cosine"
+  storage_path: "data/vector_db"
+
+# Embedding Model Settings
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"  # Lightweight model
+  max_seq_length: 256
+  batch_size: 32
+  device: "cpu"  # or "cuda" if GPU available
+
+# LLM Settings (Ollama)
+llm:
+  provider: "ollama"
+  model_name: "llama2:7b"  # Can be changed to other lightweight models
+  base_url: "http://localhost:11434"
+  temperature: 0.7
+  max_tokens: 512
+  top_p: 0.9
+  
+# Document Processing Settings
+document_processing:
+  chunk_size: 500  # characters
+  chunk_overlap: 50  # characters
+  supported_formats:
+    - "pdf"
+    - "txt"
+    - "docx"
+    - "md"
+    - "html"
+
+# Retrieval Settings
+retrieval:
+  top_k: 3  # Number of chunks to retrieve
+  score_threshold: 0.5  # Minimum similarity score
+
+# Audit and Logging Settings
+audit:
+  enabled: true
+  log_dir: "logs"
+  log_level: "INFO"
+  max_log_size: "10MB"
+  retention_days: 30
+  include_query_metadata: true
+  exclude_sensitive_data: true
+  integrity_check: true
+
+# Performance Settings
+performance:
+  enable_caching: true
+  cache_size: 100
+  parallel_processing: true
+  max_workers: 4
+
+# Security Settings
+security:
+  require_authentication: false  # Set to true in production
+  audit_all_operations: true
+  secure_delete: true  # Securely delete temporary decrypted data
