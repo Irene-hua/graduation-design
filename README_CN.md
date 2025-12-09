@@ -86,7 +86,7 @@ pip install -r requirements.txt
 ollama serve
 
 # 下载模型（在另一个终端）
-ollama pull llama2:7b
+ollama pull llama3.2:3b
 ```
 
 ### 4. 配置系统
